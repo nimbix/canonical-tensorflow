@@ -1,6 +1,6 @@
 FROM jarvice/ubuntu-ibm-mldl-ppc64le
 
-RUN . /opt/DL/tensorflow/bin/activate && \
+RUN . /opt/DL/tensorflow/bin/tensorflow-activate && \
     pip install --upgrade six pandas
 
 RUN apt-get update && apt-get install -y emacs htop git telnet && apt-get clean
