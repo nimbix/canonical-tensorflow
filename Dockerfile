@@ -9,3 +9,4 @@ RUN mkdir -p /usr/local/distributed-tensorflow && \
     cd /usr/local/distributed-tensorflow && \
     git clone https://github.com/tensorflow/models.git
     
+RUN echo ". /opt/DL/tensorflow/bin/tensorflow-activate >> /etc/skel/.bashrc"
