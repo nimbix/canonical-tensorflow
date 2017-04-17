@@ -10,3 +10,7 @@ RUN mkdir -p /usr/local/distributed-tensorflow && \
     git clone https://github.com/tensorflow/models.git
     
 RUN echo ". /opt/DL/tensorflow/bin/tensorflow-activate >> /etc/skel/.bashrc"
+
+COPY ./tutorials /usr/local/distributed-tensorflow/tutorials
+
+COPY ./NAE/AppDef.json /etc/NAE/AppDef.json
