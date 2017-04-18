@@ -9,7 +9,7 @@
         "IBM POWER/Deep Learning"
     ],
     "machines": [
-        "npg4"
+        "np8g4"
     ],
     "vault-types": [
         "BLOCK"
