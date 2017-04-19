@@ -45,8 +45,8 @@
                     "positional": true,
                     "required": true
                 },
-                "experimentid": {
-                    "name": "experiment_id",
+                "EXPERIMENT_ID": {
+                    "name": "Experiment Id",
                     "description": "unique ID of experiment, or previous job name to re-start",
                     "type": "STR",
                     "positional": false,
