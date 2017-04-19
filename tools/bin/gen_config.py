@@ -1,6 +1,9 @@
+#!/usr/bin/env python
+
 import json
 import os
 import sys
+import argparse
 
 MASTER_PORT = '2221'
 PS_PORT = '2222'
@@ -9,13 +12,15 @@ WORKER_PORTS = ['2223', '2224', '2225', '2226']
 
 def get_nodes():
   """Reads the nodes from the environment"""
+
   with open('/etc/JARVICE/nodes', 'rb') as f:
     nodes = f.readlines()
   return map(lambda x: x.strip(), nodes)
 
 
 def gen_config(nodes, worker_ports):
-  """Configuration with one parameter per node and one per GPU (four per node on the Minsky's)
+  """Configuration with one parameter per node and one per GPU (four per node
+  on the Minsky's)
 
   The master is located on the head node.
   """
@@ -37,6 +42,7 @@ def gen_config(nodes, worker_ports):
     else:
       for port in WORKER_PORTS:
         worker_hosts.append('%s:%s' % (host, port))
+
   if os.environ['TASK_TYPE'] == 'worker':
     task_index = int(os.environ['TASK_ID']) - 2
   else:
@@ -57,6 +63,7 @@ def gen_config(nodes, worker_ports):
 
 
 def validate_task_type():
+
   TASK_TYPES = ['ps', 'master', 'worker']
 
   if os.environ['TASK_TYPE'] not in TASK_TYPES:
@@ -68,7 +75,7 @@ def validate_task_type():
     sys.exit(1)
 
 if __name__ == '__main__':
-
+  
   if 'TASK_TYPE' not in os.environ:
     raise 'TASK_TYPE is not defined in environment'
     sys.exit(1)
