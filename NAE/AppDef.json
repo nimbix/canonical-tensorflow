@@ -44,6 +44,14 @@
                     "value": "/usr/local/distributed-tensorflow/tutorials/start_mpi.sh",
                     "positional": true,
                     "required": true
+                },
+                "experimentid": {
+                    "name": "experiment_id",
+                    "description": "unique ID of experiment, or previous job name to re-start",
+                    "type": "STR",
+                    "positional": false,
+                    "variable": true,
+                    "required": false
                 }
             }
         },
