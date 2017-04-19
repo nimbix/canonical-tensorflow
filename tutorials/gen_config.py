@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 
 MASTER_PORT = '2221'
 PS_PORT = '2222'
@@ -36,7 +37,10 @@ def gen_config(nodes, worker_ports):
     else:
       for port in WORKER_PORTS:
         worker_hosts.append('%s:%s' % (host, port))
-
+  if os.environ['TASK_TYPE'] == 'worker':
+    task_index = int(os.environ['TASK_ID']) - 2
+  else:
+    task_index = int(os.environ['TASK_ID'])
   tf_config = {
     'cluster': {
       'ps': ps_hosts,
@@ -45,7 +49,7 @@ def gen_config(nodes, worker_ports):
     },
     'task': {
         'type': os.environ['TASK_TYPE'],
-        'index': os.environ['TASK_ID']
+        'index': task_index
     },
     'environment': 'cloud'
   }
@@ -56,15 +60,18 @@ def validate_task_type():
   TASK_TYPES = ['ps', 'master', 'worker']
 
   if os.environ['TASK_TYPE'] not in TASK_TYPES:
-    raise 'TASK_TYPE must be one of %s' % (', '.join(TASK_TYPES))
+    print 'TASK_TYPE must be one of %s' % (', '.join(TASK_TYPES))
+    sys.exit(1) 
 
   if not 'TASK_ID' in os.environ:
-    raise 'TASK_ID must be defined as an integer'
+    print'TASK_ID must be defined as an integer'
+    sys.exit(1)
 
 if __name__ == '__main__':
 
   if 'TASK_TYPE' not in os.environ:
     raise 'TASK_TYPE is not defined in environment'
+    sys.exit(1)
 
   validate_task_type()
 

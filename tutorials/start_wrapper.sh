@@ -1,6 +1,8 @@
 #!/bin/bash
+set -e
+set -x
 
-. /opt/DL/tensorflow/bin/tensorflow-activate
+source /opt/DL/tensorflow/bin/tensorflow-activate
 
 export TASK_TYPE="$1"
 export TASK_ID=$2
@@ -11,6 +13,9 @@ else
    export TF_CONFIG=$(cat `dirname $0`/config.json)
 fi
 
-exec /data/tutorials/tensorflow.sh /data/tutorials/simple_dist_experiment.py train >> /tmp/$$.log
-
-  
+echo "TF_CONFIG: $TF_CONFIG"
+if [ "$TASK_TYPE" = "master" ]; then
+  /data/tutorials/tensorflow.sh /data/tutorials/simple_dist_experiment.py train_and_evaluate >> /tmp/$$.log
+else
+  /data/tutorials/tensorflow.sh /data/tutorials/simple_dist_experiment.py train >> /tmp/$$.log
+fi

@@ -11,7 +11,7 @@ def get_experiment(output_dir):
     # Get the TF_CONFIG from the environment, and set some other options.
     # This is optional since the default RunConfig() for Estimators will
     # pick up the cluster configuration from TF_CONFIG environment
-    config = RunConfig(log_device_placement=True)
+    config = RunConfig(log_device_placement=True, cores=1)
     exp = experiment.Experiment(
         estimator=dnn.DNNRegressor(
             feature_columns=[
@@ -24,7 +24,7 @@ def get_experiment(output_dir):
         ),
         train_input_fn=test_data.iris_input_logistic_fn,
         eval_input_fn=test_data.iris_input_logistic_fn,
-        train_steps=50000)
+        train_steps=500000)
     return exp
 
 if __name__ == '__main__':
