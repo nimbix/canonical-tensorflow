@@ -1,5 +1,6 @@
 #!/bin/bash
 
+SCRIPT="$1"
 GPUS_PER_NODE=4
 
 export PYTHONPATH=$PYTHONPATH:/usr/local/distributed-tensorflow/tools/lib

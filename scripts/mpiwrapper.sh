@@ -3,10 +3,14 @@
 set -x
 set -e
 
+# User input
+SCRIPT="$1"
+
 # Use a simple mapping of one GPU per process.
 CUDA_VISIBLE_DEVICES=${OMPI_COMM_WORLD_LOCAL_RANK}
 
 GPUS_PER_NODE=4
+
 
 if [ ${OMPI_COMM_WORLD_RANK} -ge 2 ]; then
   let TASK_ID=${OMPI_COMM_WORLD_RANK}
@@ -35,4 +39,4 @@ if [ "$TASK_TYPE" = "worker" ]; then
 fi
 
 # Learn runner will read the TF_CONFIG object
-/usr/local/distributed-tensorflow/scripts/start_wrapper.sh "${TASK_TYPE}" "${TASK_ID}"
+/usr/local/distributed-tensorflow/scripts/start_wrapper.sh "${SCRIPT}" "${TASK_TYPE}" "${TASK_ID}"

@@ -45,6 +45,14 @@
                     "positional": true,
                     "required": true
                 },
+                "script": {
+                    "name": "Script",
+                    "description": "Replicated device training script",
+                    "type": "FILE",
+                    "filter": "*.py"
+                    "positional": true,
+                    "required": true
+                },
                 "EXPERIMENT_ID": {
                     "name": "Experiment Id",
                     "description": "unique ID of experiment, or previous job name to re-start",

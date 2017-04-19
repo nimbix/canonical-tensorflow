@@ -2,8 +2,8 @@
 set -e
 set -x
 
-export TASK_TYPE="$1"
-export TASK_ID="$2"
+export TASK_TYPE="$2"
+export TASK_ID="$3"
 
 export TF_CONFIG=$(/usr/local/distributed-tensorflow/tools/bin/generate_tensorflow_config)
 
