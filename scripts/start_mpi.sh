@@ -2,7 +2,8 @@
 
 GPUS_PER_NODE=4
 
-export PYTHONPATH=$PYTHONPATH:/usr/local/tensorflowtools
+export PYTHONPATH=$PYTHONPATH:/usr/local/distributed-tensorflow/tools/lib
+export PATH=$PATH:/usr/local/distributed-tensorflow/tools/bin
 
 [ -r /etc/JARVICE/jobenv.sh ] && source /etc/JARVICE/jobenv.sh
 [ -r /etc/JARVICE/jobinfo.sh ] && source /etc/JARVICE/jobinfo.sh

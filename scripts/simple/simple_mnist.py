@@ -1,30 +1,28 @@
-#!/usr/bin/env python
-
-from tensorflow.examples.tutorials.mnist import input_data
-mnist = input_data.read_data_sets("/data/mnist/", one_hot=True)
+import numpy as np
 import tensorflow as tf
 
-x = tf.placeholder(tf.float32, [None, 784])
-W = tf.Variable(tf.zeros([784, 10]))
-b = tf.Variable(tf.zeros([10]))
+# Model parameters
+W = tf.Variable([.3], tf.float32)
+b = tf.Variable([-.3], tf.float32)
+# Model input and output
+x = tf.placeholder(tf.float32)
+linear_model = W * x + b
+y = tf.placeholder(tf.float32)
+# loss
+loss = tf.reduce_sum(tf.square(linear_model - y)) # sum of the squares
+# optimizer
+optimizer = tf.train.GradientDescentOptimizer(0.01)
+train = optimizer.minimize(loss)
+# training data
+x_train = [1,2,3,4]
+y_train = [0,-1,-2,-3]
+# training loop
+init = tf.global_variables_initializer()
+sess = tf.Session()
+sess.run(init) # reset values to wrong
+for i in range(1000):
+  sess.run(train, {x:x_train, y:y_train})
 
-y = tf.nn.softmax(tf.matmul(x, W) + b)
-
-y_ = tf.placeholder(tf.float32, [None, 10])
-cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
-train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
-
-sess = tf.InteractiveSession()
-
-tf.global_variables_initializer().run()
-
-for _ in range(1000):
-    batch_xs, batch_ys = mnist.train.next_batch(100)
-    sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
-
-
-correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
-accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-
-print(sess.run(accuracy, feed_dict={x: mnist.test.images, y_: mnist.test.labels}))
-
+# evaluate training accuracy
+curr_W, curr_b, curr_loss  = sess.run([W, b, loss], {x:x_train, y:y_train})
+print("W: %s b: %s loss: %s"%(curr_W, curr_b, curr_loss))
