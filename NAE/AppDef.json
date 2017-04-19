@@ -62,11 +62,14 @@
             "description": "Launch a session with all boot services, including SSH (if installed).  Connection address and credentials will appear in your web browser once available.",
             "parameters": {}
         },
-        "tensorboard": {
+        "tensorboard-only": {
             "path": "/bin/bash",
             "interactive": true,
             "name": "tensorboard",
             "description": "Launch tensorboard",
+            "machines": [
+                "np8c0"
+            ],
             "parameters": {
                 "-l": {
                     "name": "-l",
