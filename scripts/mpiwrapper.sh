@@ -3,7 +3,7 @@
 set -x
 set -e
 
-# One GPU per process
+# Use a simple mapping of one GPU per process.
 CUDA_VISIBLE_DEVICES=${OMPI_COMM_WORLD_LOCAL_RANK}
 
 GPUS_PER_NODE=4
@@ -29,12 +29,10 @@ fi
 export CUDA_VISIBLE_DEVICES
 export TASK_TYPE
 export TASK_ID
-TF_CONFIG=$(python /usr/local/distributed-tensorflow/tutorials/gen_config.py)
-export TF_CONFIG
 
 if [ "$TASK_TYPE" = "worker" ]; then
   sleep 2
 fi
 
 # Learn runner will read the TF_CONFIG object
-/bin/bash `dirname $0`/start_wrapper.sh "${TASK_TYPE}" "${TYPE_ID}"
+/usr/local/distributed-tensorflow/scripts/start_wrapper.sh "${TASK_TYPE}" "${TASK_ID}"

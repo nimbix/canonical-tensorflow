@@ -12,4 +12,4 @@ export JOB_NAME
 export EXPERIMENT_ID
 export GPUS_PER_NODE
 
-`which mpirun` -x JOB_NAME,EXPERIMENT_ID -hostfile /etc/JARVICE/nodes --map-by ppr:${GPUS_PER_NODE}:node /bin/bash `dirname $0`/mpiwrapper.sh 
+`which mpirun` -x JOB_NAME,EXPERIMENT_ID -hostfile /etc/JARVICE/nodes --map-by ppr:${GPUS_PER_NODE}:node /usr/local/distributed-tensorflow/scripts/mpiwrapper.sh 
