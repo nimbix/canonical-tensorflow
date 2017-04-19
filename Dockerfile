@@ -12,15 +12,12 @@ RUN apt-get update && \
             tmux \
     && apt-get clean
 
-RUN mkdir -p /usr/local/distributed-tensorflow && \
-    cd /usr/local/distributed-tensorflow && \
-    git clone https://github.com/tensorflow/models.git
-    
+# Automatically add tensorflow into environment
 RUN echo ". /opt/DL/tensorflow/bin/tensorflow-activate" >> /etc/skel/.bashrc
 
-COPY ./tutorials /usr/local/distributed-tensorflow/tutorials
-
-COPY ./NAE/AppDef.json /etc/NAE/AppDef.json
+COPY ./scripts /usr/local/distributed-tensorflow/scripts
+COPY ./tools /usr/local/distributed-tensorflow/tools
 
 # Set the URL to the Tensorboard portal
 COPY ./NAE/url.txt /etc/NAE/url.txt
+COPY ./NAE/AppDef.json /etc/NAE/AppDef.json
