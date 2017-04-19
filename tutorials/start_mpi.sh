@@ -1,7 +1,5 @@
 #!/bin/bash
 
-NNODES=$(cat /etc/JARVICE/nodes)
-let NPROCS=4
+GPUS_PER_NODE=4
 
-`which mpirun` -np ${NPROCS} /bin/bash `dirname $0`/mpiwrapper.sh 
-
+`which mpirun` -hostfile /etc/JARVICE/nodes --map-by ppr:${GPUS_PER_NODE}:node /bin/bash `dirname $0`/mpiwrapper.sh 
