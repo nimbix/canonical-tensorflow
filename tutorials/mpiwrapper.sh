@@ -2,33 +2,30 @@
 
 set -x
 
+GPUS_PER_NODE=4
+let CUDA_VISIBLE_DEVICES=${OMPI_COMM_WORLD_RANK} % ${GPUS_PER_NODE}
+
 # One CUDA device per worker
-if [ ${OMPI_COMM_WORLD_LOCAL_RANK} -lt 4 ]; then
-  export CUDA_VISIBLE_DEVICES=${OMPI_COMM_WORLD_LOCAL_RANK}
+if [ ${OMPI_COMM_WORLD_RANK} -ge 2 ]; then
+  let TASK_ID=${OMPI_COMM_WORLD_RANK}-2
   TASK_TYPE="worker"
-  TASK_ID=${OMPI_COMM_WORLD_LOCAL_RANK}
-elif [ ${OMPI_COMM_WORLD_LOCAL_RANK} -eq 4 ]; then
-  export CUDA_VISIBLE_DEVICES=""
-  TASK_ID=$(( ${OMPI_COMM_WORLD_RANK} / 5 ))
+elif [ ${OMPI_COMM_WORLD_WORLD_RANK} -eq 0 ]; then
+  TASK_ID=0
   TASK_TYPE="ps"
-  if [ $TASK_ID -eq 0 ]; then
-    TASK_TYPE="master"
-  fi
+elif [ ${OMPI_COMM_WORLD_WORLD_RANK} -eq 1 ];then
+  TASK_ID=1
+  TASK_TYPE="master"
 fi
 
-echo "Task ID[$(hostname)]: ${OMPI_COMM_WORLD_LOCAL_RANK} / ${OMPI_COMM_WORLD_RANK}"
+echo "Task ID[$(hostname)]: ${TASK_ID}"
 
 export TASK_TYPE
 export TASK_ID
-export TF_CONFIG=$(python gen_config.py)
+export TF_CONFIG=$(python /usr/local/distributed-tensorflow/tutorials/gen_config.py)
+
 if [ "$TASK_TYPE" = "worker" ]; then
   sleep 5
 fi
 
-if [ "$TASK_TYPE" = "ps" ]; then
-  sleep 3
-fi
-  
 # Learn runner will read the TF_CONFIG object
-exec /data/tutorials/tensorflow.sh $@ >/dev/null
-
+exec /usr/local/distributed-tensorflow/tensorflow.sh $@ >/dev/null
