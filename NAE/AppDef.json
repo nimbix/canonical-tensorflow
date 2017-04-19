@@ -40,7 +40,8 @@
                 "command": {
                     "name": "Command",
                     "description": "Command to run",
-                    "type": "STR",
+                    "type": "CONST",
+                    "value": "/usr/local/distributed-tensorflow/tutorials/start_mpi.sh",
                     "positional": true,
                     "required": true
                 }
@@ -53,16 +54,49 @@
             "description": "Launch a session with all boot services, including SSH (if installed).  Connection address and credentials will appear in your web browser once available.",
             "parameters": {}
         },
-        "GUI": {
-            "path": "/usr/local/bin/nimbix_desktop",
+        "tensorboard": {
+            "path": "/bin/bash",
             "interactive": true,
-            "name": "GUI",
-            "description": "Run a GUI command, and connect interactively directly from your web browser (requires Nimbix Desktop in image).",
+            "name": "tensorboard",
+            "description": "Launch tensorboard",
             "parameters": {
+                "-l": {
+                    "name": "-l",
+                    "description": "-l",
+                    "type": "CONST",
+                    "value": "-l",
+                    "positional": true,
+                    "required": true
+                },
+                "-c": {
+                    "name": "-c",
+                    "description": "-c",
+                    "type": "CONST",
+                    "value": "-c",
+                    "positional": true,
+                    "required": true
+                },
                 "command": {
                     "name": "Command",
                     "description": "Command to run",
-                    "type": "STR",
+                    "type": "CONST",
+                    "value": "tensorboard",
+                    "positional": true,
+                    "required": true
+                },
+                "logdiropt": {
+                    "name": "--logdir",
+                    "description": "logdir",
+                    "type": "CONST",
+                    "value": "--logdir",
+                    "positional": true,
+                    "required": true
+                },
+                "logdir": {
+                    "name": "--logdir",
+                    "description": "logdir",
+                    "type": "CONST",
+                    "value": "/data/tensorflow-output",
                     "positional": true,
                     "required": true
                 }
