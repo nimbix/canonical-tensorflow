@@ -5,6 +5,7 @@ from tensorflow.contrib.layers.python.layers import feature_column
 from tensorflow.contrib.learn.python.learn.estimators import dnn
 import learn_runner
 import argparse
+import os
 
 def get_experiment(output_dir):
     """Run a simple Experiment. Cluster config can be set in the environment"""
@@ -27,12 +28,19 @@ def get_experiment(output_dir):
         train_steps=500000)
     return exp
 
-if __name__ == '__main__':
-  parser = argparse.ArgumentParser()
-  parser.add_argument("schedule")
-  args = parser.parse_args()
+def main()
+  if 'EXPERIMENT_ID' in os.environ:
+    experiment_dir = os.environ['EXPERIMENT_ID']
+  else:
+    experiment_dir = os.environ['JOB_NAME']
 
+  output_dir = '/data/tensorflow-output/%s' % (experiment_dir)
   learn_runner.run(
-	experiment_fn=get_experiment,
-	output_dir="/data/experiment-model",
-      	schedule=args.schedule)
+        experiment_fn=get_experiment,
+        output_dir=output_dir)
+
+if __name__ == '__main__':
+  #  parser = argparse.ArgumentParser()
+  #  parser.add_argument("schedule")
+  #  args = parser.parse_args()
+  main()
