@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export PYTHONPATH=$PYTHONPATH:/usr/local/tensorflowtools
+
 [ -r /etc/JARVICE/jobenv.sh ] && source /etc/JARVICE/jobenv.sh
 [ -r /etc/JARVICE/jobinfo.sh ] && source /etc/JARVICE/jobinfo.sh
 
