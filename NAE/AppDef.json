@@ -49,7 +49,7 @@
                     "name": "Script",
                     "description": "Replicated device training script",
                     "type": "FILE",
-                    "filter": "*.py"
+                    "filter": "*.py",
                     "positional": true,
                     "required": true
                 },
