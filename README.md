@@ -2,36 +2,18 @@
 
 ## Turn-key Distributed Tensorflow Training
 
-The best built-in abstraction in Tensorflow for running experiments (i.e., train/evaluation cycles) is `tf.contrib.learn`. The original API is inspired by the outstanding [scikit-learn](http://scikit-learn.org/stable/) project.
+The best built-in abstraction in Tensorflow for running experiments (i.e., train/evaluation cycles) is `tf.contrib.learn`. The original API is inspired by the outstanding [scikit-learn](http://scikit-learn.org/stable/) project, but has evolved to support more powerful distributed training capabilities. Scikit-learn uses BLAS and high-performance local parallel solutions (it is built on top of numpy and scipy). However, it is not inherently well suited for multi-node, distributed training. Tensorflow provides the necessary mechanisms for arbitrarily placing variables and operations on any devices.
 
-Tensorflow has much more powerful distributed training capabilities than scikit-learn. Scikit-learn uses BLAS and high-performance local parallel solutions (it is built on top of numpy and scipy). However, it is not inherently well suited for multi-node, distributed training.
+In practice, it is easier to use some sensible defaults in implementing distributed training pipelines. In `tf.contrib.learn`, the existing implementations of `Estimators` typically use between-graph replication as described by Derek Murray at the [TensorFlow Dev Summit 2017](https://www.youtube.com/watch?v=la_M6bCV91M).
 
-Even with existing mature libraries such as OpenMPI, MVAPICH2, Intel MPI, IBM MPI (formerly known as Platform Computing MPI) in the ecosystem, there have been very few distributed machine learning frameworks released. Implementing distributed algorithms, it turns out, is quite hard.
+The Estimators implemnet between-graph replication using a default device setter called replicated_device_setter. This uses an intelligent, round-robin bin packing algorithm for parameter servers and places operations on workers.
 
-Tensorflow provides a different programming model for distributed computation. In neural networks, there are two common architectures for distributed training: syncrhonous training, and asynchronous training.
+When the training pipeline is launched, each worker then starts and begins iterating on its partition of the data and transmits the variable updates back to the parameter servers. For more information on a design pattern whose implementations follow the between-graph replication pattern, have a look through the estimators code:
+ * tensorflow/tensorflow/contrib/learn/python/learn/estimators/
 
+## How to Leverage Distributed Tensorflow
 
-tensorflow/tensorflow/contrib/learn/python/learn/estimators/
-
-
-### Synchronous Training
-Synchronous training assumes that each parallel branch of the computation graph runs for approximately the same amount of time. This is hard assumption to make if you do not have enough of the same kind of hardware! In an ad-hoc cluster computing environment (an office of desktops, a hand-built cluster, or a cloud that doesn't specialize in high performance computing), variation among computational nodes can vary greatly, causing the performance of the computational branches to be as good as the slowest unit.
-
-### Asynchronous Training
-Asynchronous training, however, allows parallel branches of the computation graph to run asynchronously, updating parameters (i.e., the iterative resulting parameters of an optimizater, such as stochastic gradient descent).  This presents a potentially greater challenge, because updates on the slowest branch might be repeating unnecessary computation.
-
-What are the trade offs between these two architectures?
-
-What does this mean for applied machine learning specialists? It means that implementing distributed algorithms is actually quite hard. There are a lot of tradeoffs, and optimizing these algorithms for performance and scale is a fundamentally different skillset than solving data science problems on massive data sets.
-
-Because of the complexities of distributed training, Tensorflow Learn has implemented abstractions that make it simpler to run distributed, and Nimbix, partnering with Canonical, has developed a turn-key environment where training workflows can be run without any expertise in the infrastructure itself.
-
-
-## How to Leveraged Distributed Tensorflow
-
-The easiest way to leverage Distributed Tensorflow is to create an experiment using `tf.contrib.learn.Experiment`. The documentation on this is a bit sparse, so we will walk through step-by-step how to run an Experiment using Distributed Tensorflow! Judging from the comments about "internal" code and the number of recent git commits, this is one of the main ways that Google runs experiments internally (Google employees: we're glad to hear your comments on this!).
-
-For complete reference, refer to the [acual implementation in contrib.learn.experiment.py](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/contrib/learn/python/learn/experiment.py).
+Nimbix and Canonical have teamed up to implement a turn-key environment to leverage Distributed Tensorflow. For complete reference, refer to the [acual implementation in contrib.learn.experiment.py](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/contrib/learn/python/learn/experiment.py).
 
 ```python
 class Experiment(object):
@@ -69,12 +51,28 @@ def _create_my_experiment(output_dir):
       train_input_fn=my_train_input,
       eval_input_fn=my_eval_input)
 
-    learn_runner.run(
+def main():
+  learn_runner.run(
       experiment_fn=_create_my_experiment,
-      output_dir="some/output/dir",
-      schedule="train")
+      # Write the models to distributed filesystem
+      output_dir="/data/tensorflow-output",
+      # Can be: train, serve, train_and_evaluate, or blank
+      schedule="train_and_evaluate")
+
+if __name__ == '__main__':
+   main()
 
 ```
 
+The job environment will automatically run at least three processes on the master node:
+ * master (index 0)
+ * worker (index 0)
+ * ps (index 0)
+
+The IBM Power Minksy machines are equipped with 4 x P100s. TF_CONFIG will be exported and the appropriate processes will be started to support scaling with one parameter server for every machine and one worker for each GPU, beyond the initial 3.
+
+Tensorboard runs from /data/tensorflow-output/ and each session runs with the current JOB_NAME.
+
 Reference:
  * https://www.tensorflow.org/versions/r0.12/tutorials/estimators/
+ * [Distributed TensorFlow @ TensorFlow Dev Summit 2017](https://www.youtube.com/watch?v=la_M6bCV91M)
