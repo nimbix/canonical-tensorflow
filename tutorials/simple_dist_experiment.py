@@ -7,6 +7,7 @@ import learn_runner
 import argparse
 import os
 
+
 def get_experiment(output_dir):
     """Run a simple Experiment. Cluster config can be set in the environment"""
     # Get the TF_CONFIG from the environment, and set some other options.
@@ -28,16 +29,18 @@ def get_experiment(output_dir):
         train_steps=500000)
     return exp
 
-def main()
+
+def main():
+  """Users should import learn_runner and run it"""
   if 'EXPERIMENT_ID' in os.environ:
     experiment_dir = os.environ['EXPERIMENT_ID']
   else:
     experiment_dir = os.environ['JOB_NAME']
-
   output_dir = '/data/tensorflow-output/%s' % (experiment_dir)
   learn_runner.run(
         experiment_fn=get_experiment,
         output_dir=output_dir)
+
 
 if __name__ == '__main__':
   #  parser = argparse.ArgumentParser()

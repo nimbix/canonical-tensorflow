@@ -21,3 +21,6 @@ RUN echo ". /opt/DL/tensorflow/bin/tensorflow-activate" >> /etc/skel/.bashrc
 COPY ./tutorials /usr/local/distributed-tensorflow/tutorials
 
 COPY ./NAE/AppDef.json /etc/NAE/AppDef.json
+
+# Set the URL to the Tensorboard portal
+COPY ./NAE/url.txt /etc/NAE/url.txt

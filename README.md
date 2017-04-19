@@ -6,7 +6,7 @@ The best built-in abstraction in Tensorflow for running experiments (i.e., train
 
 In practice, it is easier to use some sensible defaults in implementing distributed training pipelines. In `tf.contrib.learn`, the existing implementations of `Estimators` typically use between-graph replication as described by Derek Murray at the [TensorFlow Dev Summit 2017](https://www.youtube.com/watch?v=la_M6bCV91M).
 
-The Estimators implemnet between-graph replication using a default device setter called replicated_device_setter. This uses an intelligent, round-robin bin packing algorithm for parameter servers and places operations on workers.
+The Estimators implemnet between-graph replication using a default device setter called `tf.train.replicated_device_setter`. This places variables on parameter servers using an online, round-robin bin packing algorithm and places operations on workers.
 
 When the training pipeline is launched, each worker then starts and begins iterating on its partition of the data and transmits the variable updates back to the parameter servers. For more information on a design pattern whose implementations follow the between-graph replication pattern, have a look through the estimators code:
  * tensorflow/tensorflow/contrib/learn/python/learn/estimators/
@@ -31,7 +31,7 @@ class Experiment(object):
 from tensorflow.contrib.learn.python.learn.estimators import test_data
 from tensorflow.contrib.learn.python.learn import experiment
 from tensorflow.contrib.layers.python.layers import feature_column
-from tensorflow.contrib.learn import learn_runner
+import learn_runne
 
 def run_experiment():
     exp = experiment.Experiment(
@@ -66,10 +66,11 @@ if __name__ == '__main__':
 
 The job environment will automatically run at least three processes on the master node:
  * master (index 0)
- * worker (index 0)
  * ps (index 0)
+ * worker (index 0)
+ * worker (index 1)
 
-The IBM Power Minksy machines are equipped with 4 x P100s. TF_CONFIG will be exported and the appropriate processes will be started to support scaling with one parameter server for every machine and one worker for each GPU, beyond the initial 3.
+The IBM Power Minksy machines are equipped with 4 x P100s. TF_CONFIG will be exported and the appropriate processes will be started to support scaling with one parameter server for every machine and one worker for each GPU, beyond the initial 3 processes.
 
 Tensorboard runs from /data/tensorflow-output/ and each session runs with the current JOB_NAME.
 

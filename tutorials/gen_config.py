@@ -61,7 +61,7 @@ def validate_task_type():
 
   if os.environ['TASK_TYPE'] not in TASK_TYPES:
     print 'TASK_TYPE must be one of %s' % (', '.join(TASK_TYPES))
-    sys.exit(1) 
+    sys.exit(1)
 
   if not 'TASK_ID' in os.environ:
     print'TASK_ID must be defined as an integer'
