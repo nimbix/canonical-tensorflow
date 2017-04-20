@@ -41,7 +41,7 @@
                     "name": "Command",
                     "description": "Command to run",
                     "type": "CONST",
-                    "value": "/usr/local/distributed-tensorflow/tutorials/start_mpi.sh",
+                    "value": "/usr/local/distributed-tensorflow/scripts/start_mpi.sh",
                     "positional": true,
                     "required": true
                 },
@@ -89,7 +89,7 @@
                     "name": "Command",
                     "description": "Command to run",
                     "type": "CONST",
-                    "value": "/usr/local/distributed-tensorflow/tutorials/start_mpi.sh",
+                    "value": "/usr/local/distributed-tensorflow/scripts/start_mpi.sh",
                     "positional": true,
                     "required": true
                 },
