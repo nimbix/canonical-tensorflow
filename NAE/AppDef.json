@@ -1,6 +1,6 @@
 {
-    "name": "distributed-tensorflow",
-    "description": "distributed-tensorflow application",
+    "name": "Distributed Tensorflow",
+    "description": "Launch a Distributed Tensorflow Cluster than runs between-graph replicated training and evaluation.",
     "author": "sfox",
     "licensed": true,
     "classifications": [
@@ -12,14 +12,15 @@
         "np8g4"
     ],
     "vault-types": [
-        "BLOCK"
+        "BLOCK",
+        "FILE"
     ],
     "commands": {
         "demo": {
             "path": "/bin/bash",
             "interactive": false,
             "name": "Demo",
-            "description": "Run a batch command using /bin/bash.  The output may be monitored directly in your web browser.",
+            "description": "Train a simple DNNRegressor Estimator on the Iris test data set",
             "parameters": {
                 "-l": {
                     "name": "-l",
@@ -63,11 +64,11 @@
                 }
             }
         },
-        "Batch": {
+        "distributed-tf": {
             "path": "/bin/bash",
             "interactive": false,
-            "name": "Batch",
-            "description": "Run a batch command using /bin/bash.  The output may be monitored directly in your web browser.",
+            "name": "Distributed Tensorflow",
+            "description": "Run any distributed Tensorflow workflow with ps, master and worker processes.",
             "parameters": {
                 "-l": {
                     "name": "-l",
@@ -111,11 +112,11 @@
                 }
             }
         },
-        "Server": {
+        "developer-server": {
             "path": "/sbin/init",
             "interactive": true,
-            "name": "Server",
-            "description": "Launch a session with all boot services, including SSH (if installed).  Connection address and credentials will appear in your web browser once available.",
+            "name": "Developer Server",
+            "description": "Launch a server session with SSH to test Tensorflow-capable python code.",
             "parameters": {}
         },
         "tensorboard-only": {
