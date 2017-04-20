@@ -4,7 +4,6 @@ from tensorflow.contrib.learn.python.learn import RunConfig
 from tensorflow.contrib.layers.python.layers import feature_column
 from tensorflow.contrib.learn.python.learn.estimators import dnn
 import learn_runner
-import argparse
 import os
 
 
@@ -13,7 +12,7 @@ def get_experiment(output_dir):
     # Get the TF_CONFIG from the environment, and set some other options.
     # This is optional since the default RunConfig() for Estimators will
     # pick up the cluster configuration from TF_CONFIG environment
-    config = RunConfig(log_device_placement=True, cores=1)
+    config = RunConfig(log_device_placement=True)
     exp = experiment.Experiment(
         estimator=dnn.DNNRegressor(
             feature_columns=[
@@ -43,7 +42,4 @@ def main():
 
 
 if __name__ == '__main__':
-  #  parser = argparse.ArgumentParser()
-  #  parser.add_argument("schedule")
-  #  args = parser.parse_args()
   main()
