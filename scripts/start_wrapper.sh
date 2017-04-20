@@ -12,7 +12,7 @@ echo "TF_CONFIG: $TF_CONFIG"
 source /opt/DL/tensorflow/bin/tensorflow-activate
 
 if [ "$TASK_TYPE" = "master" ]; then
-  /data/tutorials/tensorflow.sh /usr/local/distributed-tensorflow/tutorials/simple_dist_experiment.py train_and_evaluate >> /tmp/$$.log
+  python /usr/local/distributed-tensorflow/scripts/simple_dist_experiment.py train_and_evaluate >> /tmp/$$.log
 else
-  /data/tutorials/tensorflow.sh /usr/local/distributed-tensorflow/tutorials/simple_dist_experiment.py train >> /tmp/$$.log
+  python /usr/local/distributed-tensorflow/scripts/simple_dist_experiment.py train >> /tmp/$$.log
 fi
