@@ -18,7 +18,7 @@
     "commands": {
         "demo": {
             "path": "/bin/bash",
-            "interactive": false,
+            "interactive": true,
             "name": "Demo",
             "description": "Train a simple DNNRegressor Estimator on the Iris test data set",
             "parameters": {
@@ -66,7 +66,7 @@
         },
         "distributed-tf": {
             "path": "/bin/bash",
-            "interactive": false,
+            "interactive": true,
             "name": "Distributed Tensorflow",
             "description": "Run any distributed Tensorflow workflow with ps, master and worker processes.",
             "parameters": {
