@@ -19,7 +19,7 @@ elif [ ${OMPI_COMM_WORLD_RANK} -eq 0 ]; then
   TASK_ID=0
   TASK_TYPE="ps"
 elif [ ${OMPI_COMM_WORLD_RANK} -eq 1 ];then
-  TASK_ID=1
+  TASK_ID=0
   TASK_TYPE="master"
 fi
 
