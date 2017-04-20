@@ -1,9 +1,18 @@
 #!/bin/bash
 
+set -e
+
 SCRIPT="$1"
 GPUS_PER_NODE=4
 TENSORFLOW_OUTDIR=/data/tensorflow-output
 EXPERIMENT_ID=
+
+# Wait for slaves to come up
+sleep 10
+
+for i in `cat /etc/JARVICE/nodes`; do
+    ssh -oBatchMode=yes $i uptime
+done
 
 export PYTHONPATH=$PYTHONPATH:/usr/local/distributed-tensorflow/tools/lib
 export PATH=$PATH:/usr/local/distributed-tensorflow/tools/bin
@@ -17,7 +26,7 @@ export GPUS_PER_NODE
 
 mkdir -p ${TENSORFLOW_OUTDIR}
 cd ${TENSORFLOW_OUTDIR}
-tensorboard --logdir ${TENSORFLOW_OUTDIR} &
+`which tensorboard` --logdir ${TENSORFLOW_OUTDIR} &
 
 sudo service ssh start 2>/dev/null
 
