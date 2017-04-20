@@ -3,6 +3,7 @@
 SCRIPT="$1"
 GPUS_PER_NODE=4
 TENSORFLOW_OUTDIR=/data/tensorflow-output
+EXPERIMENT_ID=
 
 export PYTHONPATH=$PYTHONPATH:/usr/local/distributed-tensorflow/tools/lib
 export PATH=$PATH:/usr/local/distributed-tensorflow/tools/bin
