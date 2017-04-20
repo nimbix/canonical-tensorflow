@@ -20,4 +20,4 @@ tensorboard --logdir ${TENSORFLOW_OUTDIR} &
 
 sudo service ssh start 2>/dev/null
 
-`which mpirun` -x JOB_NAME,EXPERIMENT_ID -hostfile /etc/JARVICE/nodes --map-by ppr:${GPUS_PER_NODE}:node /usr/local/distributed-tensorflow/scripts/mpiwrapper.sh 
+`which mpirun` -x JOB_NAME,EXPERIMENT_ID,PYTHONPATH,PATH -hostfile /etc/JARVICE/nodes --map-by ppr:${GPUS_PER_NODE}:node /usr/local/distributed-tensorflow/scripts/mpiwrapper.sh 
