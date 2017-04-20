@@ -15,6 +15,54 @@
         "BLOCK"
     ],
     "commands": {
+        "demo": {
+            "path": "/bin/bash",
+            "interactive": false,
+            "name": "Demo",
+            "description": "Run a batch command using /bin/bash.  The output may be monitored directly in your web browser.",
+            "parameters": {
+                "-l": {
+                    "name": "-l",
+                    "description": "-l",
+                    "type": "CONST",
+                    "value": "-l",
+                    "positional": true,
+                    "required": true
+                },
+                "-c": {
+                    "name": "-c",
+                    "description": "-c",
+                    "type": "CONST",
+                    "value": "-c",
+                    "positional": true,
+                    "required": true
+                },
+                "command": {
+                    "name": "Command",
+                    "description": "Command to run",
+                    "type": "CONST",
+                    "value": "/usr/local/distributed-tensorflow/tutorials/start_mpi.sh",
+                    "positional": true,
+                    "required": true
+                },
+                "script": {
+                    "name": "Script",
+                    "description": "Replicated device training script",
+                    "type": "CONST",
+                    "value": "/usr/local/distributed-tensorflow/scripts/simple_dist_experiment.py",
+                    "positional": true,
+                    "required": true
+                },
+                "EXPERIMENT_ID": {
+                    "name": "Experiment Id",
+                    "description": "unique ID of experiment, or previous job name to re-start",
+                    "type": "STR",
+                    "positional": false,
+                    "variable": true,
+                    "required": false
+                }
+            }
+        },
         "Batch": {
             "path": "/bin/bash",
             "interactive": false,
