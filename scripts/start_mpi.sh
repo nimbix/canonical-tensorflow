@@ -3,6 +3,8 @@
 set -e
 set -x
 
+sudo service ssh start
+
 SCRIPT="$1"
 GPUS_PER_NODE=4
 TENSORFLOW_OUTDIR=/data/tensorflow-output
