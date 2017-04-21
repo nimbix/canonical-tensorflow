@@ -1,6 +1,6 @@
 {
-    "name": "Distributed Tensorflow",
-    "description": "Launch a Distributed Tensorflow Cluster than runs between-graph replicated training and evaluation.",
+    "name": "Distributed Tensorflow for IBM POWER",
+    "description": "Launch a Distributed Tensorflow GPU Cluster than runs between-graph replicated training and evaluation.",
     "author": "sfox",
     "licensed": true,
     "classifications": [
