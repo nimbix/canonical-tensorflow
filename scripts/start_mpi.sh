@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -x
 
 SCRIPT="$1"
 GPUS_PER_NODE=4
@@ -11,7 +12,9 @@ EXPERIMENT_ID=
 sleep 10
 
 for i in `cat /etc/JARVICE/nodes`; do
-    ssh -oBatchMode=yes $i uptime
+    if [ "$i" != "$(hostname)" ]; then
+        ssh -oBatchMode=yes $i uptime
+    fi
 done
 
 export PYTHONPATH=$PYTHONPATH:/usr/local/distributed-tensorflow/tools/lib
