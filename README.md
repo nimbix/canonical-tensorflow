@@ -13,55 +13,63 @@ When the training pipeline is launched, each worker then starts and begins itera
 
 ## How to Leverage Distributed Tensorflow
 
-Nimbix and Canonical have teamed up to implement a turn-key environment to leverage Distributed Tensorflow. For complete reference, refer to the [acual implementation in contrib.learn.experiment.py](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/contrib/learn/python/learn/experiment.py).
+For complete reference on how to implement an `Experiment,` refer to the [acual implementation in contrib.learn.experiment.py](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/contrib/learn/python/learn/experiment.py).
 
-```python
-class Experiment(object):
-  """Experiment is a class containing all information needed to train a model.
+Users can implement any training strategy that references `master`, `ps`, and `worker` process types. Each one of these has access to a single P100 GPU. The user's Python script will be executed in each environment, with the appropriate TF_CONFIG exported which does two things:
+ 1. Describes the configuration of the entire cluster by using a key-value store of `master`, `ps` and `worker` host/port addresses, and
+ 1. Identifies which task type and index the currently running process should assume.
 
-  After an experiment is created (by passing an Estimator and inputs for
-  training and evaluation), an Experiment instance knows how to invoke training
-  and eval loops in a sensible fashion for distributed training.
-  """
-```
+More sophisticated training pipelines can be implemented in a similar manner, but this one should cover a good deal of use cases for between-graph replication.
 
 ### Minimal Experiment Example
 
 ```python
+
 from tensorflow.contrib.learn.python.learn.estimators import test_data
 from tensorflow.contrib.learn.python.learn import experiment
+from tensorflow.contrib.learn.python.learn import RunConfig
 from tensorflow.contrib.layers.python.layers import feature_column
-import learn_runne
+from tensorflow.contrib.learn.python.learn.estimators import dnn
+import learn_runner
+import os
 
-def run_experiment():
+
+def get_experiment(output_dir):
+    """Run a simple Experiment. Cluster config can be set in the environment"""
+    # Get the TF_CONFIG from the environment, and set some other options.
+    # This is optional since the default RunConfig() for Estimators will
+    # pick up the cluster configuration from TF_CONFIG environment
+    config = RunConfig(log_device_placement=True)
     exp = experiment.Experiment(
         estimator=dnn.DNNRegressor(
             feature_columns=[
                 feature_column.real_valued_column(
                     'feature', dimension=4)
             ],
-            hidden_units=[3, 3]),
+            model_dir=output_dir,
+            hidden_units=[3, 3],
+            config=config
+        ),
         train_input_fn=test_data.iris_input_logistic_fn,
-        eval_input_fn=test_data.iris_input_logistic_fn)
-    exp.test()
+        eval_input_fn=test_data.iris_input_logistic_fn,
+        train_steps=1000)
+    return exp
 
-def _create_my_experiment(output_dir):
-    return tf.contrib.learn.Experiment(
-      estimator=my_estimator(model_dir=output_dir),
-      train_input_fn=my_train_input,
-      eval_input_fn=my_eval_input)
 
 def main():
+  """Users should import learn_runner and run it"""
+  if 'EXPERIMENT_ID' in os.environ:
+    experiment_dir = os.environ['EXPERIMENT_ID']
+  else:
+    experiment_dir = os.environ['JOB_NAME']
+  output_dir = '/data/tensorflow-output/%s' % (experiment_dir)
   learn_runner.run(
-      experiment_fn=_create_my_experiment,
-      # Write the models to distributed filesystem
-      output_dir="/data/tensorflow-output",
-      # Can be: train, serve, train_and_evaluate, or blank
-      schedule="train_and_evaluate")
+        experiment_fn=get_experiment,
+        output_dir=output_dir)
+
 
 if __name__ == '__main__':
-   main()
-
+  main()
 ```
 
 The job environment will automatically run at least three processes on the master node:
@@ -70,9 +78,11 @@ The job environment will automatically run at least three processes on the maste
  * worker (index 0)
  * worker (index 1)
 
+For slave nodes, it will launch 4 workers per node (one per GPU), with the index ID increasing per worker.
+
 The IBM Power Minksy machines are equipped with 4 x P100s. TF_CONFIG will be exported and the appropriate processes will be started to support scaling with one parameter server for every machine and one worker for each GPU, beyond the initial 3 processes.
 
-Tensorboard runs from /data/tensorflow-output/ and each session runs with the current JOB_NAME.
+Tensorboard runs from /data/tensorflow-output/ and each session runs with the current JOB_NAME (or EXPERIMENT_ID). Inputing a previously used EXPERIMENT_ID will check the /data/tensflow-output directory for previous runs and resume if there are any existing checkpoints.
 
 Reference:
  * https://www.tensorflow.org/versions/r0.12/tutorials/estimators/
