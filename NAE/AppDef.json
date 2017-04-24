@@ -1,13 +1,15 @@
 {
-    "name": "Distributed Tensorflow",
+    "name": "Distributed Tensorflow for IBM POWER",
     "description": "Launch a Distributed Tensorflow GPU Cluster than runs between-graph replicated training and evaluation.",
     "author": "sfox",
     "licensed": true,
     "classifications": [
-        "Machine Learning/Deep Learning"
+        "Machine Learning/Deep Learning",
+        "IBM POWER/Machine Learning",
+        "IBM POWER/Deep Learning"
     ],
     "machines": [
-        "ngd5"
+        "np8g4"
     ],
     "vault-types": [
         "BLOCK",
@@ -16,7 +18,7 @@
     "commands": {
         "demo": {
             "path": "/bin/bash",
-            "interactive": true,
+            "interactive": false,
             "name": "Demo",
             "description": "Train a simple DNNRegressor Estimator on the Iris test data set",
             "parameters": {
