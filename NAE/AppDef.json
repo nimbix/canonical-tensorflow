@@ -18,7 +18,7 @@
     "commands": {
         "demo": {
             "path": "/bin/bash",
-            "interactive": false,
+            "interactive": true,
             "name": "Demo",
             "description": "Train a simple DNNRegressor Estimator on the Iris test data set",
             "parameters": {
